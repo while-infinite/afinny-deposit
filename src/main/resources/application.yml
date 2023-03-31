@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: ${APPLICATION_NAME:deposit}
+  profiles:
+    active: prod

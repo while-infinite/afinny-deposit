@@ -1,0 +1,61 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/${spring.application.name}}
+    username: postgres
+    password: ${DB_PASSWORD:password}
+    hikari:
+      maximum-pool-size: ${DATASOURCE_POOL_MAX_SIZE:10}
+      minimum-idle: ${DATASOURCE_POOL_MIN_IDLE:1}
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
+  zipkin:
+    enabled: false
+  sleuth:
+    kafka:
+      enabled: false
+  flyway:
+    enabled: false
+
+  jpa:
+    properties.hibernate:
+      enable_lazy_load_no_trans: true
+
+eureka:
+  client:
+    enabled: false
+
+feign:
+  httpclient:
+    enabled: false
+
+kafka:
+  enabled: false
+  kafka-properties:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+  topics:
+    deposit-service-producer:
+      path: "deposit_to_master_new_deposit"
+    deposit-service-listener:
+      path: "master_to_deposit_new_deposit"
+    withdraw-listener:
+      path: "master_to_deposit_early_withdrawal"
+    withdraw-producer:
+      path: "deposit_to_master_early_withdrawal"
+    deposit-service-card-status-producer:
+      path: "deposit_to_master_update_status_card"
+    bank-system-card-status-listener:
+      path: "master_to_deposit_update_status_card"
+    deposit-service-auto-renewal-producer:
+      path: "deposit_to_master_update_status_deposit"
+    new-pin-code-card-producer:
+      path: "deposit_to_master_update_pin"
+    new-card-producer:
+      path: "deposit_to_master_card_order"
+    new-card-listener:
+      path: "master_to_deposit_card_order"
+  bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}

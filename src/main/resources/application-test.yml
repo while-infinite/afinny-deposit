@@ -1,0 +1,67 @@
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
+
+  h2:
+    console:
+      enabled: false
+      settings:
+        web-allow-others: true
+  flyway:
+    enabled: false
+  cloud:
+    discovery:
+      enabled: false
+
+# Custom Kafka
+kafka:
+  kafka-properties:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+  topics:
+    deposit-service-producer:
+      path: "deposit_to_master_new_deposit"
+      enabled: true
+    deposit-service-listener:
+      path: "master_to_deposit_new_deposit"
+      enabled: true
+    withdraw-listener:
+      path: "master_to_deposit_early_withdrawal_test"
+      enabled: true
+    withdraw-producer:
+      path: "deposit_to_master_early_withdrawal_test"
+      enabled: true
+    deposit-service-card-status-producer:
+      path: "deposit_to_master_update_status_card"
+      enabled: true
+    bank-system-card-status--listener:
+      path: "master_to_deposit_update_status_card"
+      enabled: true
+    deposit-service-auto-renewal-producer:
+      path: "deposit_to_master_update_status_deposit"
+      enabled: true
+    new-pin-code-card-producer:
+      path: "deposit_to_master_update_pin"
+      enabled: true
+    new-card-producer:
+      path: "deposit_to_master_card_order"
+      enabled: true
+    new-card-listener:
+      path: "master_to_deposit_card_order"
+      enabled: true
+  bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
